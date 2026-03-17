@@ -3,6 +3,7 @@ import java.util.*;
 
 import com.hexaware.hms.dto.UserRequestDTO;
 import com.hexaware.hms.dto.UserResponseDTO;
+import com.hexaware.hms.entity.Role;
 import com.hexaware.hms.entity.User;
 
 public interface IUserService {
@@ -18,7 +19,7 @@ public interface IUserService {
 	public void deleteUser(int id);
 	
 	public List<UserResponseDTO> viewAllUsers();
-	public List<UserResponseDTO> getUsersByRole(String role);
+	public List<UserResponseDTO> getUsersByRole(Role role);
 	
 
 }

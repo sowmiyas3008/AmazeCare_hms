@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hexaware.hms.dto.AppointmentRequestDTO;
+import com.hexaware.hms.dto.AppointmentResponseDTO;
 import com.hexaware.hms.entity.Appointment;
 import com.hexaware.hms.entity.AppointmentStatus;
 import com.hexaware.hms.service.IAppointmentService;
@@ -26,22 +28,22 @@ public class AppointmentController {
 	private IAppointmentService service;
 	
 	@PostMapping
-	public Appointment bookAppointment(@RequestBody Appointment appointment) {
+	public AppointmentResponseDTO bookAppointment(@RequestBody AppointmentRequestDTO appointment) {
 		return service.bookAppointment(appointment);
 	}
 	
 	@GetMapping("/{id}")
-	public Appointment getAppointmentById(@PathVariable int id) {
+	public AppointmentResponseDTO getAppointmentById(@PathVariable int id) {
 		return service.getAppointmentById(id);
 	}
 	
 	@GetMapping
-	public List<Appointment> getAllAppointments(){
+	public List<AppointmentResponseDTO> getAllAppointments(){
 		return service.getAllAppointments();
 	}
 	
 	@PutMapping("/{id}")
-	public Appointment updateAppointment(@PathVariable int id, @RequestBody Appointment appointment) {
+	public AppointmentResponseDTO updateAppointment(@PathVariable int id, @RequestBody AppointmentRequestDTO appointment) {
 		return service.updateAppointment(id, appointment);
 	}
 	
@@ -53,30 +55,30 @@ public class AppointmentController {
 	}
 	
 	@GetMapping("/patients/{id}")
-	public List<Appointment> getAppointmentByPatient(@PathVariable int id){
+	public List<AppointmentResponseDTO> getAppointmentByPatient(@PathVariable int id){
 		return service.getAppointmentsByPatient(id);
 	}
 	
 	@GetMapping("/doctors/{id}")
-	public List<Appointment> getAppointmentByDoctor(@PathVariable int id){
+	public List<AppointmentResponseDTO> getAppointmentByDoctor(@PathVariable int id){
 		return service.getAppointmentsByDoctor(id);
 	}
 	
     @GetMapping("/date/{date}")
-    public List<Appointment> getAppointmentsByDate(@PathVariable String date) {
+    public List<AppointmentResponseDTO> getAppointmentsByDate(@PathVariable String date) {
         LocalDate localDate = LocalDate.parse(date);
         return service.getAppointmentsByDate(localDate);
     }
 
  
     @GetMapping("/upcoming")
-    public List<Appointment> getUpcomingAppointments() {
+    public List<AppointmentResponseDTO> getUpcomingAppointments() {
         return service.getUpcomingAppointments();
     }
 
 
     @GetMapping("/past")
-    public List<Appointment> getPastAppointments() {
+    public List<AppointmentResponseDTO> getPastAppointments() {
         return service.getPastAppointments();
     }
 	

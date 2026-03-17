@@ -10,14 +10,20 @@ import org.springframework.stereotype.Service;
 import com.hexaware.hms.dao.IUserDAO;
 import com.hexaware.hms.dto.UserRequestDTO;
 import com.hexaware.hms.dto.UserResponseDTO;
+import com.hexaware.hms.entity.Role;
 import com.hexaware.hms.entity.User;
+import com.hexaware.hms.exception.UserNotFoundException;
 import com.hexaware.hms.service.IUserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 public class UserServiceImpl implements IUserService {
 
     @Autowired
     private IUserDAO userDAO;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     
     private UserResponseDTO convertToDTO(User user) {
     	UserResponseDTO dto = new UserResponseDTO();
@@ -32,7 +38,8 @@ public class UserServiceImpl implements IUserService {
     public UserResponseDTO addUser(UserRequestDTO dto) {
         User user = new User();
         user.setEmail(dto.getEmail());
-        user.setPassword(dto.getPassword());
+//        user.setPassword(dto.getPassword());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setRole(dto.getRole());
 
         User saved = userDAO.save(user);
@@ -62,19 +69,19 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserResponseDTO getUserById(int id) {
 
-        Optional<User> user = userDAO.findById(id);
+    	User user = userDAO.findById(id).orElseThrow(() -> new UserNotFoundException("user not found"));
 
-        if (user.isPresent()) {
-            return convertToDTO(user.get());
-        }
+        
+    	UserResponseDTO dto = convertToDTO(user);
+    	return dto;
+        
 
-        return null;
     }
 
     @Override
     public UserResponseDTO getUserByEmail(String email) {
 
-        User user = userDAO.findByEmail(email);
+        User user = userDAO.findByEmail(email).orElseThrow(() -> new UserNotFoundException("email not found"));
 
         if (user != null) {
             return convertToDTO(user);
@@ -84,11 +91,11 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public UserResponseDTO login(String email, String password) {
+    public UserResponseDTO Login(String email, String password) {
 
-        User user = userDAO.findByEmail(email);
+        User user = userDAO.findByEmail(email).orElseThrow(() -> new UserNotFoundException("user not found"));
 
-        if (user != null && user.getPassword().equals(password)) {
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
             return convertToDTO(user);
         }
 
@@ -104,9 +111,8 @@ public class UserServiceImpl implements IUserService {
 
             User user = existing.get();
 
-            if (user.getPassword().equals(oldp)) {
-
-                user.setPassword(newp);
+            if (passwordEncoder.matches(oldp, user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(newp));
                 userDAO.save(user);
                 return true;
             }
@@ -135,8 +141,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public List<UserResponseDTO> getUsersByRole(String role) {
-
+    public List<UserResponseDTO> getUsersByRole(Role role) {
         List<User> users = userDAO.findByRole(role);
         List<UserResponseDTO> list = new ArrayList<>();
 
@@ -146,5 +151,7 @@ public class UserServiceImpl implements IUserService {
 
         return list;
     }
+
+
     
 }

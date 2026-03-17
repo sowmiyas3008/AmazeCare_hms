@@ -1,17 +1,19 @@
 package com.hexaware.hms.service;
 
 import java.util.List;
-import com.hexaware.hms.entity.Specialization;
+
+import com.hexaware.hms.dto.SpecializationRequestDTO;
+import com.hexaware.hms.dto.SpecializationResponseDTO;
 
 public interface ISpecializationService {
 
-    Specialization addSpecialization(Specialization specialization);
+    SpecializationResponseDTO addSpecialization(SpecializationRequestDTO dto);
 
-    Specialization getById(int id);
+    SpecializationResponseDTO getById(int id);
 
-    List<Specialization> getAll();
+    List<SpecializationResponseDTO> getAll();
 
-    Specialization updateSpecialization(Specialization specialization);
+    SpecializationResponseDTO updateSpecialization(int id, SpecializationRequestDTO dto);
 
     void deleteSpecialization(int id);
 

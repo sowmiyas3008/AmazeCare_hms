@@ -1,12 +1,12 @@
 package com.hexaware.hms.Controller;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.hexaware.hms.entity.Specialization;
+import com.hexaware.hms.dto.SpecializationRequestDTO;
+import com.hexaware.hms.dto.SpecializationResponseDTO;
 import com.hexaware.hms.service.ISpecializationService;
 
 @RestController
@@ -17,23 +17,26 @@ public class SpecializationController {
     private ISpecializationService specializationService;
 
     @PostMapping
-    public Specialization addSpecialization(@RequestBody Specialization specialization) {
+    public SpecializationResponseDTO addSpecialization(@RequestBody SpecializationRequestDTO specialization) {
         return specializationService.addSpecialization(specialization);
     }
 
     @GetMapping("/{id}")
-    public Specialization getById(@PathVariable int id) {
+    public SpecializationResponseDTO getById(@PathVariable int id) {
         return specializationService.getById(id);
     }
 
     @GetMapping
-    public List<Specialization> getAll() {
+    public List<SpecializationResponseDTO> getAll() {
         return specializationService.getAll();
     }
 
-    @PutMapping
-    public Specialization updateSpecialization(@RequestBody Specialization specialization) {
-        return specializationService.updateSpecialization(specialization);
+    @PutMapping("/{id}")
+    public SpecializationResponseDTO updateSpecialization(
+            @PathVariable int id,
+            @RequestBody SpecializationRequestDTO specialization) {
+
+        return specializationService.updateSpecialization(id, specialization);
     }
 
     @DeleteMapping("/{id}")

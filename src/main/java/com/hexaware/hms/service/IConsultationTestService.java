@@ -1,11 +1,13 @@
 package com.hexaware.hms.service;
 
 import java.util.List;
-import com.hexaware.hms.entity.ConsultationTest;
+
+import com.hexaware.hms.dto.ConsultationTestRequestDTO;
+import com.hexaware.hms.dto.ConsultationTestResponseDTO;
 
 public interface IConsultationTestService {
 
-    ConsultationTest addTestToConsultation(ConsultationTest ct);
+    ConsultationTestResponseDTO addTestToConsultation(ConsultationTestRequestDTO dto);
 
-    List<ConsultationTest> getTestsByConsultation(int consultationId);
+    List<ConsultationTestResponseDTO> getTestsByConsultation(int consultationId);
 }

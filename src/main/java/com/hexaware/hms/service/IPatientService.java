@@ -1,22 +1,27 @@
 package com.hexaware.hms.service;
-import java.util.*;
 
-import com.hexaware.hms.entity.Patient;
+import java.util.List;
+
+import com.hexaware.hms.dto.PatientRequestDTO;
+import com.hexaware.hms.dto.PatientResponseDTO;
 
 public interface IPatientService {
-	public Patient addPatient(Patient p);
-	public Patient updatePatient(int id,Patient p);
-	
-	public Patient getByUserId(int userId);
-	public Patient getByPatientId(int pid);
-	
-	public void deletePatient(int id);
-	
-	int calculateAge(int patientId);
-	List<Patient> getPatientsAboveAge(int age);
-	
-	List<Patient> searchPatientsByName(String name);
-	 
-	List<Patient> getAllPatients();
 
+    PatientResponseDTO addPatient(PatientRequestDTO dto);
+
+    PatientResponseDTO updatePatient(int id, PatientRequestDTO dto);
+
+    PatientResponseDTO getByUserId(int userId);
+
+    PatientResponseDTO getByPatientId(int pid);
+
+    void deletePatient(int id);
+
+    int calculateAge(int patientId);
+
+    List<PatientResponseDTO> getPatientsAboveAge(int age);
+
+    List<PatientResponseDTO> searchPatientsByName(String name);
+
+    List<PatientResponseDTO> getAllPatients();
 }

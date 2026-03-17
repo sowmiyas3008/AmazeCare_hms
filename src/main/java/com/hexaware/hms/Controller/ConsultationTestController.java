@@ -1,12 +1,12 @@
 package com.hexaware.hms.Controller;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.hexaware.hms.entity.ConsultationTest;
+import com.hexaware.hms.dto.ConsultationTestRequestDTO;
+import com.hexaware.hms.dto.ConsultationTestResponseDTO;
 import com.hexaware.hms.service.IConsultationTestService;
 
 @RestController
@@ -17,12 +17,14 @@ public class ConsultationTestController {
     private IConsultationTestService consultationTestService;
 
     @PostMapping
-    public ConsultationTest addTest(@RequestBody ConsultationTest ct) {
-        return consultationTestService.addTestToConsultation(ct);
+    public ConsultationTestResponseDTO addTest(@RequestBody ConsultationTestRequestDTO dto) {
+
+        return consultationTestService.addTestToConsultation(dto);
     }
 
     @GetMapping("/{consultationId}")
-    public List<ConsultationTest> getTestsByConsultation(@PathVariable int consultationId) {
+    public List<ConsultationTestResponseDTO> getTestsByConsultation(@PathVariable int consultationId) {
+
         return consultationTestService.getTestsByConsultation(consultationId);
     }
 }

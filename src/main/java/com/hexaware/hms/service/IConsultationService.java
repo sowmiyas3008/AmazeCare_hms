@@ -1,19 +1,23 @@
 package com.hexaware.hms.service;
 
 import java.util.List;
-import com.hexaware.hms.entity.Consultation;
+
+import com.hexaware.hms.dto.ConsultationRequestDTO;
+import com.hexaware.hms.dto.ConsultationResponseDTO;
 
 public interface IConsultationService {
 
-    Consultation addConsultation(Consultation consultation);
-    Consultation getConsultationById(int id);
-    List<Consultation> getAllConsultations();
-    Consultation updateConsultation(int id, Consultation consultation);
+    ConsultationResponseDTO addConsultation(ConsultationRequestDTO dto);
+
+    ConsultationResponseDTO getConsultationById(int id);
+
+    List<ConsultationResponseDTO> getAllConsultations();
+
+    ConsultationResponseDTO updateConsultation(int id, ConsultationRequestDTO dto);
+
     void deleteConsultation(int id);
 
-    // ⭐ MAIN FEATURE
-    List<Consultation> getConsultationHistoryByPatient(int patientId);
+    List<ConsultationResponseDTO> getConsultationHistoryByPatient(int patientId);
 
-    // Useful
-    Consultation getConsultationByAppointment(int appointmentId);
+    ConsultationResponseDTO getConsultationByAppointment(int appointmentId);
 }

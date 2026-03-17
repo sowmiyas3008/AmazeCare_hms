@@ -6,6 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.hexaware.hms.dto.UserRequestDTO;
+import com.hexaware.hms.dto.UserResponseDTO;
+import com.hexaware.hms.entity.Role;
 import com.hexaware.hms.entity.User;
 import com.hexaware.hms.service.IUserService;
 
@@ -18,32 +21,32 @@ public class UserController {
 
   
     @PostMapping
-    public User addUser(@RequestBody User user) {
+    public UserResponseDTO addUser(@RequestBody UserRequestDTO user) {
         return userService.addUser(user);
     }
 
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable int id,
-                           @RequestBody User user) {
+    public UserResponseDTO updateUser(@PathVariable int id,
+                           @RequestBody UserRequestDTO user) {
         return userService.updateUser(id, user);
     }
 
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable int id) {
+    public UserResponseDTO getUserById(@PathVariable int id) {
         return userService.getUserById(id);
     }
 
 
     @GetMapping("/email/{email}")
-    public User getUserByEmail(@PathVariable String email) {
+    public UserResponseDTO getUserByEmail(@PathVariable String email) {
         return userService.getUserByEmail(email);
     }
 
 
     @PostMapping("/login")
-    public User login(@RequestParam String email,
+    public UserResponseDTO login(@RequestParam String email,
                       @RequestParam String password) {
         return userService.Login(email, password);
     }
@@ -71,13 +74,13 @@ public class UserController {
 
 
     @GetMapping
-    public List<User> viewAllUsers() {
+    public List<UserResponseDTO> viewAllUsers() {
         return userService.viewAllUsers();
     }
 
 
     @GetMapping("/role/{role}")
-    public List<User> getUsersByRole(@PathVariable String role) {
+    public List<UserResponseDTO> getUsersByRole(@PathVariable Role role) {
         return userService.getUsersByRole(role);
     }
 

@@ -1,9 +1,13 @@
 package com.hexaware.hms.service;
 
 import java.util.List;
-import com.hexaware.hms.entity.Medicine;
+
+import com.hexaware.hms.dto.MedicineRequestDTO;
+import com.hexaware.hms.dto.MedicineResponseDTO;
 
 public interface IMedicineService {
-    Medicine addMedicine(Medicine medicine);
-    List<Medicine> getAllMedicines();
+
+    MedicineResponseDTO addMedicine(MedicineRequestDTO dto);
+
+    List<MedicineResponseDTO> getAllMedicines();
 }

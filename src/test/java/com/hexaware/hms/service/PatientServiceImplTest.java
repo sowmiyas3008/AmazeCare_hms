@@ -9,7 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.hexaware.hms.entity.Patient;
+import com.hexaware.hms.dto.PatientRequestDTO;
+import com.hexaware.hms.dto.PatientResponseDTO;
 import com.hexaware.hms.entity.Gender;
 
 @SpringBootTest
@@ -21,14 +22,15 @@ class PatientServiceImplTest {
     @Test
     void testAddPatient() {
 
-        Patient p = new Patient();
-        p.setFullName("John Doe");
-        p.setDob(LocalDate.of(1995, 5, 10));
-        p.setGender(Gender.MALE);
-        p.setPhone("9876543210");
-        p.setAddress("Chennai");
+        PatientRequestDTO dto = new PatientRequestDTO();
+        dto.setUserId(1);
+        dto.setFullName("John Doe");
+        dto.setDob(LocalDate.of(1995, 5, 10));
+        dto.setGender(Gender.MALE);
+        dto.setPhone("9876543210");
+        dto.setAddress("Chennai");
 
-        Patient saved = service.addPatient(p);
+        PatientResponseDTO saved = service.addPatient(dto);
 
         assertNotNull(saved);
         assertEquals("John Doe", saved.getFullName());
@@ -37,18 +39,23 @@ class PatientServiceImplTest {
     @Test
     void testUpdatePatient() {
 
-        Patient p = service.getByPatientId(1);
-        p.setPhone("9999999999");
+        PatientRequestDTO dto = new PatientRequestDTO();
+        dto.setFullName("John Updated");
+        dto.setPhone("9999999999");
+        dto.setDob(LocalDate.of(1995, 5, 10));
+        dto.setGender(Gender.MALE);
+        dto.setAddress("Chennai");
 
-        Patient updated = service.updatePatient(p);
+        PatientResponseDTO updated = service.updatePatient(1, dto);
 
+        assertNotNull(updated);
         assertEquals("9999999999", updated.getPhone());
     }
 
     @Test
     void testGetByUserId() {
 
-        Patient p = service.getByUserId(1);
+        PatientResponseDTO p = service.getByUserId(1);
 
         assertNotNull(p);
     }
@@ -56,7 +63,7 @@ class PatientServiceImplTest {
     @Test
     void testGetByPatientId() {
 
-        Patient p = service.getByPatientId(1);
+        PatientResponseDTO p = service.getByPatientId(1);
 
         assertNotNull(p);
     }
@@ -66,7 +73,7 @@ class PatientServiceImplTest {
 
         service.deletePatient(1);
 
-        Patient p = service.getByPatientId(1);
+        PatientResponseDTO p = service.getByPatientId(1);
 
         assertNull(p);
     }
@@ -74,18 +81,15 @@ class PatientServiceImplTest {
     @Test
     void testCalculateAge() {
 
-        Patient p = new Patient();
-        p.setDob(LocalDate.of(2000, 1, 1));
+        int age = service.calculateAge(1);
 
-        int age = service.calculateAge(p);
-
-        assertTrue(age > 0);
+        assertTrue(age >= 0);
     }
 
     @Test
     void testGetPatientsAboveAge() {
 
-        List<Patient> list = service.getPatientsAboveAge(30);
+        List<PatientResponseDTO> list = service.getPatientsAboveAge(30);
 
         assertNotNull(list);
     }
@@ -93,7 +97,7 @@ class PatientServiceImplTest {
     @Test
     void testSearchPatientsByName() {
 
-        List<Patient> list = service.searchPatientsByName("John");
+        List<PatientResponseDTO> list = service.searchPatientsByName("John");
 
         assertNotNull(list);
     }

@@ -25,7 +25,7 @@ public class UserRequestDTO {
 	public Role getRole() {
 		return role;
 	}
-	public void setRole(String role) {
+	public void setRole(Role role) {
 		this.role = role;
 	}
 	

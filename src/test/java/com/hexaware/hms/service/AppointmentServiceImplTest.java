@@ -10,10 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.hexaware.hms.entity.Appointment;
+import com.hexaware.hms.dto.AppointmentRequestDTO;
+import com.hexaware.hms.dto.AppointmentResponseDTO;
 import com.hexaware.hms.entity.AppointmentStatus;
-import com.hexaware.hms.entity.Patient;
-import com.hexaware.hms.entity.Doctor;
 
 @SpringBootTest
 class AppointmentServiceImplTest {
@@ -24,11 +23,13 @@ class AppointmentServiceImplTest {
     @Test
     void testBookAppointment() {
 
-        Appointment appt = new Appointment();
+        AppointmentRequestDTO appt = new AppointmentRequestDTO();
         appt.setAppointmentDate(LocalDateTime.now().plusDays(1));
         appt.setStatus(AppointmentStatus.CONFIRMED);
+        appt.setDoctorId(1);
+        appt.setPatientId(1);
 
-        Appointment saved = service.bookAppointment(appt);
+        AppointmentResponseDTO saved = service.bookAppointment(appt);
 
         assertNotNull(saved);
         assertTrue(saved.getAppointmentId() > 0);
@@ -37,7 +38,7 @@ class AppointmentServiceImplTest {
     @Test
     void testGetAppointmentById() {
 
-        Appointment appt = service.getAppointmentById(1);
+        AppointmentResponseDTO appt = service.getAppointmentById(1);
 
         assertNotNull(appt);
     }
@@ -45,13 +46,15 @@ class AppointmentServiceImplTest {
     @Test
     void testUpdateAppointment() {
 
-        Appointment appt = service.getAppointmentById(1);
-
+        AppointmentRequestDTO appt = new AppointmentRequestDTO();
+        appt.setAppointmentDate(LocalDateTime.now().plusDays(2));
         appt.setStatus(AppointmentStatus.COMPLETED);
+        appt.setDoctorId(1);
+        appt.setPatientId(1);
 
-        Appointment updated = service.updateAppointment(1,appt);
+        AppointmentResponseDTO updated = service.updateAppointment(1, appt);
 
-        assertEquals("Completed", updated.getStatus());
+        assertEquals(AppointmentStatus.COMPLETED, updated.getStatus());
     }
 
     @Test
@@ -59,15 +62,15 @@ class AppointmentServiceImplTest {
 
         service.cancelAppointment(1);
 
-        Appointment appt = service.getAppointmentById(1);
+        AppointmentResponseDTO appt = service.getAppointmentById(1);
 
-        assertEquals("Cancelled", appt.getStatus());
+        assertEquals(AppointmentStatus.CANCELLED, appt.getStatus());
     }
 
     @Test
     void testGetAppointmentsByPatient() {
 
-        List<Appointment> list = service.getAppointmentsByPatient(1);
+        List<AppointmentResponseDTO> list = service.getAppointmentsByPatient(1);
 
         assertNotNull(list);
     }
@@ -75,15 +78,7 @@ class AppointmentServiceImplTest {
     @Test
     void testGetAppointmentsByDoctor() {
 
-        List<Appointment> list = service.getAppointmentsByDoctor(1);
-
-        assertNotNull(list);
-    }
-
-    @Test
-    void testGetAppointmentsByStatus() {
-
-        List<Appointment> list = service.getAppointmentsByStatus(AppointmentStatus.CONFIRMED);
+        List<AppointmentResponseDTO> list = service.getAppointmentsByDoctor(1);
 
         assertNotNull(list);
     }
@@ -91,7 +86,8 @@ class AppointmentServiceImplTest {
     @Test
     void testGetAppointmentsByDate() {
 
-        List<Appointment> list = service.getAppointmentsByDate(LocalDateTime.now().toLocalDate());
+        List<AppointmentResponseDTO> list =
+                service.getAppointmentsByDate(LocalDate.now());
 
         assertNotNull(list);
     }
@@ -99,7 +95,7 @@ class AppointmentServiceImplTest {
     @Test
     void testGetUpcomingAppointments() {
 
-        List<Appointment> list = service.getUpcomingAppointments();
+        List<AppointmentResponseDTO> list = service.getUpcomingAppointments();
 
         assertNotNull(list);
     }
@@ -107,7 +103,7 @@ class AppointmentServiceImplTest {
     @Test
     void testGetPastAppointments() {
 
-        List<Appointment> list = service.getPastAppointments();
+        List<AppointmentResponseDTO> list = service.getPastAppointments();
 
         assertNotNull(list);
     }
@@ -115,9 +111,10 @@ class AppointmentServiceImplTest {
     @Test
     void testRescheduleAppointment() {
 
-        boolean appt = service.rescheduleAppointment(1, LocalDateTime.now().plusDays(3));
+        boolean appt =
+                service.rescheduleAppointment(1, LocalDateTime.now().plusDays(3));
 
-        assertEquals(true, appt);
+        assertTrue(appt);
     }
 
     @Test
@@ -125,7 +122,7 @@ class AppointmentServiceImplTest {
 
         boolean appt = service.changeStatus(1, AppointmentStatus.COMPLETED);
 
-        assertEquals(true, appt);
+        assertTrue(appt);
     }
 
 }

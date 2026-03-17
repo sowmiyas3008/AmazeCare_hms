@@ -4,88 +4,83 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+import com.hexaware.hms.dto.UserRequestDTO;
+import com.hexaware.hms.dto.UserResponseDTO;
 import com.hexaware.hms.entity.Role;
-import com.hexaware.hms.entity.User;
 
+@SpringBootTest
 class UserServiceImplTest {
 
-	static UserServiceImpl service;
+    @Autowired
+    private IUserService service;
 
-	@BeforeAll
-	static void setUpBeforeClass() {
-		service = new UserServiceImpl();
-	}
+    @Test
+    void testAddUser() {
 
-	@Test
-	void testAddUser() {
+        UserRequestDTO user = new UserRequestDTO();
 
-		User user = new User();
-		user.setEmail("testuser@gmail.com");
-		user.setPassword("12345");
-		user.setRole(Role.ADMIN);
+        user.setEmail("testuser@gmail.com");
+        user.setPassword("12345");
+        user.setRole(Role.ADMIN);
 
-		User result = service.addUser(user);
+        UserResponseDTO result = service.addUser(user);
 
-		assertNotNull(result);
-	}
+        assertNotNull(result);
+    }
 
-	@Test
-	void testUpdateUser() {
+    @Test
+    void testUpdateUser() {
 
-		User user = service.getUserById(1);
+        UserRequestDTO user = new UserRequestDTO();
+        user.setRole(Role.DOCTOR);
 
-		if (user != null) {
-			user.setRole(Role.DOCTOR);
-			User result = service.updateUser(1,user);
-			assertEquals("DOCTOR",result.getRole());
-		} else {
-			fail("User not found");
-		}
-	}
+        UserResponseDTO result = service.updateUser(1, user);
 
-	@Test
-	void testGetUserById() {
+        assertEquals("DOCTOR", result.getRole());
+    }
 
-		User user = service.getUserById(1);
+    @Test
+    void testGetUserById() {
 
-		assertNotNull(user);
-	}
+        UserResponseDTO user = service.getUserById(1);
 
-	@Test
-	void testGetUserByEmail() {
+        assertNotNull(user);
+    }
 
-		User user = service.getUserByEmail("testuser@gmail.com");
+    @Test
+    void testGetUserByEmail() {
 
-		assertNotNull(user);
-	}
+        UserResponseDTO user = service.getUserByEmail("testuser@gmail.com");
 
-	@Test
-	void testLogin() {
+        assertNotNull(user);
+    }
 
-		User user = service.Login("testuser@gmail.com", "12345");
+    @Test
+    void testLogin() {
 
-		assertNotNull(user);
-	}
+        UserResponseDTO user = service.Login("testuser@gmail.com", "12345");
 
-	@Test
-	void testChangePassword() {
+        assertNotNull(user);
+    }
 
-		boolean result = service.changePassword(1, "newpassword","12345");
+    @Test
+    void testChangePassword() {
 
-		assertTrue(result);
-	}
+        boolean result = service.changePassword(1, "12345", "newpassword");
 
+        assertTrue(result);
+    }
 
+    @Test
+    void testGetUsersByRole() {
 
-	@Test
-	void testGetUsersByRole() {
+        List<UserResponseDTO> users = service.getUsersByRole("DOCTOR");
 
-		List<User> users = service.getUsersByRole("DOCTOR");
-
-		assertNotNull(users);
-	}
+        assertNotNull(users);
+    }
 
 }

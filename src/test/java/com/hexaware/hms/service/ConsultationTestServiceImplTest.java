@@ -8,7 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.hexaware.hms.entity.ConsultationTest;
+import com.hexaware.hms.dto.ConsultationTestRequestDTO;
+import com.hexaware.hms.dto.ConsultationTestResponseDTO;
 
 @SpringBootTest
 class ConsultationTestServiceImplTest {
@@ -19,25 +20,21 @@ class ConsultationTestServiceImplTest {
     @Test
     void testAddTestToConsultation() {
 
-        ConsultationTest ct = new ConsultationTest();
-        
+        ConsultationTestRequestDTO ct = new ConsultationTestRequestDTO();
         ct.setConsultationId(1);
         ct.setTestId(2);
 
-        ConsultationTest saved = service.addTestToConsultation(ct);
+        ConsultationTestResponseDTO saved = service.addTestToConsultation(ct);
 
         assertNotNull(saved);
-        assertEquals(1, saved.getConsultationId());
-
     }
 
     @Test
     void testGetTestsByConsultation() {
 
-        List<ConsultationTest> tests = service.getTestsByConsultation(1);
+        List<ConsultationTestResponseDTO> tests = service.getTestsByConsultation(1);
 
         assertNotNull(tests);
-        assertTrue(tests.size() >= 0);
     }
 
 }

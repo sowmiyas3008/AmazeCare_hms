@@ -1,13 +1,17 @@
 package com.hexaware.hms.service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hexaware.hms.dao.IConsultationDAO;
+import com.hexaware.hms.dto.ConsultationRequestDTO;
+import com.hexaware.hms.dto.ConsultationResponseDTO;
+import com.hexaware.hms.entity.Appointment;
 import com.hexaware.hms.entity.Consultation;
-import com.hexaware.hms.service.IConsultationService;
 
 @Service
 public class ConsultationServiceImpl implements IConsultationService {
@@ -15,35 +19,92 @@ public class ConsultationServiceImpl implements IConsultationService {
     @Autowired
     private IConsultationDAO consultationDAO;
 
-    @Override
-    public Consultation addConsultation(Consultation consultation) {
-        return consultationDAO.save(consultation);
+    // ENTITY → DTO
+    public ConsultationResponseDTO convertToDTO(Consultation consultation) {
+
+        ConsultationResponseDTO dto = new ConsultationResponseDTO();
+
+        dto.setConsultationId(consultation.getConsultationId());
+        dto.setAppointmentId(consultation.getAppointment().getAppointmentId());
+        dto.setPatientId(consultation.getAppointment().getPatient().getPatientId());
+        dto.setDoctorId(consultation.getAppointment().getDoctor().getDoctorId());
+
+        dto.setSymptoms(consultation.getSymptoms());
+        dto.setPhysicalExam(consultation.getPhysicalExam());
+        dto.setDiagnosis(consultation.getDiagnosis());
+        dto.setTreatmentPlan(consultation.getTreatmentPlan());
+
+        return dto;
+    }
+
+    // DTO → ENTITY
+    public Consultation convertToEntity(ConsultationRequestDTO dto) {
+
+        Consultation consultation = new Consultation();
+
+        Appointment appointment = new Appointment();
+        appointment.setAppointmentId(dto.getAppointmentId());
+
+        consultation.setAppointment(appointment);
+        consultation.setSymptoms(dto.getSymptoms());
+        consultation.setPhysicalExam(dto.getPhysicalExam());
+        consultation.setDiagnosis(dto.getDiagnosis());
+        consultation.setTreatmentPlan(dto.getTreatmentPlan());
+
+        return consultation;
     }
 
     @Override
-    public Consultation getConsultationById(int id) {
-        return consultationDAO.findById(id).orElse(null);
+    public ConsultationResponseDTO addConsultation(ConsultationRequestDTO dto) {
+
+        Consultation consultation = convertToEntity(dto);
+
+        Consultation saved = consultationDAO.save(consultation);
+
+        return convertToDTO(saved);
     }
 
     @Override
-    public List<Consultation> getAllConsultations() {
-        return consultationDAO.findAll();
-    }
+    public ConsultationResponseDTO getConsultationById(int id) {
 
-    @Override
-    public Consultation updateConsultation(int id, Consultation consultation) {
-        Consultation existing = consultationDAO.findById(id).orElse(null);
+        Consultation consultation = consultationDAO.findById(id).orElse(null);
 
-        if (existing!=null) {
-            existing.setDiagnosis(consultation.getDiagnosis());
-            existing.setSymptoms(consultation.getSymptoms());
-            existing.setPhysicalExam(consultation.getPhysicalExam());
-            existing.setTreatmentPlan(consultation.getTreatmentPlan());
-            
-            
-            return consultationDAO.save(existing);
+        if (consultation != null) {
+            return convertToDTO(consultation);
         }
-		return null;
+
+        return null;
+    }
+
+    @Override
+    public List<ConsultationResponseDTO> getAllConsultations() {
+
+        return consultationDAO.findAll()
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ConsultationResponseDTO updateConsultation(int id, ConsultationRequestDTO dto) {
+
+        Optional<Consultation> optional = consultationDAO.findById(id);
+
+        if (optional.isPresent()) {
+
+            Consultation consultation = optional.get();
+
+            consultation.setSymptoms(dto.getSymptoms());
+            consultation.setPhysicalExam(dto.getPhysicalExam());
+            consultation.setDiagnosis(dto.getDiagnosis());
+            consultation.setTreatmentPlan(dto.getTreatmentPlan());
+
+            Consultation updated = consultationDAO.save(consultation);
+
+            return convertToDTO(updated);
+        }
+
+        return null;
     }
 
     @Override
@@ -52,12 +113,24 @@ public class ConsultationServiceImpl implements IConsultationService {
     }
 
     @Override
-    public List<Consultation> getConsultationHistoryByPatient(int patientId) {
-        return consultationDAO.findByAppointment_Patient_PatientId(patientId);
+    public List<ConsultationResponseDTO> getConsultationHistoryByPatient(int patientId) {
+
+        return consultationDAO.findByAppointment_Patient_PatientId(patientId)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Consultation getConsultationByAppointment(int appointmentId) {
-        return consultationDAO.findByAppointment_AppointmentId(appointmentId);
+    public ConsultationResponseDTO getConsultationByAppointment(int appointmentId) {
+
+        Consultation consultation =
+                consultationDAO.findByAppointment_AppointmentId(appointmentId);
+
+        if (consultation != null) {
+            return convertToDTO(consultation);
+        }
+
+        return null;
     }
 }

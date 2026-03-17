@@ -1,13 +1,13 @@
 package com.hexaware.hms.service;
 
 import java.util.List;
-import com.hexaware.hms.entity.Prescription;
+
+import com.hexaware.hms.dto.PrescriptionRequestDTO;
+import com.hexaware.hms.dto.PrescriptionResponseDTO;
 
 public interface IPrescriptionService {
 
-    Prescription addPrescription(Prescription prescription);
+    PrescriptionResponseDTO addPrescription(PrescriptionRequestDTO dto);
 
-    List<Prescription> getByConsultation(int consultationId);
-    
-//    List<Prescription> findByConsultationId(int consultationId);
+    List<PrescriptionResponseDTO> getByConsultation(int consultationId);
 }

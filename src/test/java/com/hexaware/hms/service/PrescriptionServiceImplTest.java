@@ -4,41 +4,42 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import com.hexaware.hms.entity.Prescription;
+import com.hexaware.hms.dto.PrescriptionRequestDTO;
+import com.hexaware.hms.dto.PrescriptionResponseDTO;
 
+@SpringBootTest
 class PrescriptionServiceImplTest {
 
-	static PrescriptionServiceImpl service;
+    @Autowired
+    private IPrescriptionService service;
 
-	@BeforeAll
-	static void setUpBeforeClass() {
-		service = new PrescriptionServiceImpl();
-	}
+    @Test
+    void testAddPrescription() {
 
-	@Test
-	void testAddPrescription() {
+        PrescriptionRequestDTO dto = new PrescriptionRequestDTO();
 
-		Prescription p = new Prescription();
-		p.setConsultationId(1);
-		p.setMedicineId(1);
-		p.setDosage("1 tablet");
-		p.setInstructions("After food");
-		p.setDurationDays(5);
+        dto.setConsultationId(1);
+        dto.setMedicineId(1);
+        dto.setDosage("1 tablet");
+        dto.setInstructions("After food");
+        dto.setDurationDays(5);
 
-		boolean result = service.addPrescription(p);
+        PrescriptionResponseDTO result = service.addPrescription(dto);
 
-		assertTrue(result);
-	}
+        assertNotNull(result);
+        assertEquals("1 tablet", result.getDosage());
+    }
 
-	@Test
-	void testGetByConsultation() {
+    @Test
+    void testGetByConsultation() {
 
-		List<Prescription> prescriptions = service.getByConsultation(1);
+        List<PrescriptionResponseDTO> prescriptions =
+                service.getByConsultation(1);
 
-		assertNotNull(prescriptions);
-	}
-
+        assertNotNull(prescriptions);
+    }
 }

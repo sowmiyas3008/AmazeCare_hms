@@ -1,27 +1,33 @@
 package com.hexaware.hms.service;
 
 import java.util.List;
-import com.hexaware.hms.entity.Doctor;
+
+import com.hexaware.hms.dto.DoctorRequestDTO;
+import com.hexaware.hms.dto.DoctorResponseDTO;
 
 public interface IDoctorService {
 
-    // CRUD
-    Doctor addDoctor(Doctor doctor);
-    Doctor getDoctorById(int doctorId);
-    List<Doctor> getAllDoctors();
-    Doctor updateDoctor(int doctorId, Doctor doctor);
+    DoctorResponseDTO addDoctor(DoctorRequestDTO dto);
+
+    DoctorResponseDTO getDoctorById(int doctorId);
+
+    List<DoctorResponseDTO> getAllDoctors();
+
+    DoctorResponseDTO updateDoctor(int doctorId, DoctorRequestDTO dto);
+
     void deleteDoctor(int doctorId);
 
-    // Search
-    Doctor getDoctorByUserId(int userId);
-    List<Doctor> getDoctorsBySpeciality(String speciality);
-    List<Doctor> getDoctorsByQualification(String qualification);
+    DoctorResponseDTO getDoctorByUserId(int userId);
 
-    // Filters
-    List<Doctor> getExperiencedDoctors(int minYears);
-    List<Doctor> getDoctorsByDesignation(String designation);
+    List<DoctorResponseDTO> getDoctorsBySpeciality(String speciality);
 
-    // Utility
+    List<DoctorResponseDTO> getDoctorsByQualification(String qualification);
+
+    List<DoctorResponseDTO> getExperiencedDoctors(int minYears);
+
+    List<DoctorResponseDTO> getDoctorsByDesignation(String designation);
+
     boolean existsByPhone(String phone);
+
     int getDoctorCount();
 }

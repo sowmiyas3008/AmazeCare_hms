@@ -6,7 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.hexaware.hms.entity.Medicine;
+import com.hexaware.hms.dto.MedicineRequestDTO;
+import com.hexaware.hms.dto.MedicineResponseDTO;
 
 @SpringBootTest
 class MedicineServiceImplTest {
@@ -17,12 +18,15 @@ class MedicineServiceImplTest {
     @Test
     void testAddMedicine() {
 
-        Medicine med = new Medicine();
-        med.setName("Paracetamol");
+        // Request DTO
+        MedicineRequestDTO request = new MedicineRequestDTO();
+        request.setName("Paracetamol");
 
-        Medicine saved = service.addMedicine(med);
+        // Service Call
+        MedicineResponseDTO response = service.addMedicine(request);
 
-        assertNotNull(saved);
-        assertEquals("Paracetamol", saved.getName());
+        // Assertions
+        assertNotNull(response);
+        assertEquals("Paracetamol", response.getName());
     }
 }

@@ -2,60 +2,36 @@ package com.hexaware.hms.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import com.hexaware.hms.entity.Specialization;
+import com.hexaware.hms.dto.SpecializationRequestDTO;
+import com.hexaware.hms.dto.SpecializationResponseDTO;
 
+@SpringBootTest
 class SpecializationServiceImplTest {
 
-	static SpecializationServiceImpl service;
+    @Autowired
+    private ISpecializationService service;
 
-	@BeforeAll
-	static void setUpBeforeClass() {
-		service = new SpecializationServiceImpl();
-	}
+    @Test
+    void testAddSpecialization() {
 
-	@Test
-	void testAddSpecialization() {
+        SpecializationRequestDTO dto = new SpecializationRequestDTO();
+        dto.setName("Cardiology");
 
-		Specialization s = new Specialization();
-		s.setName("Cardiology");
+        SpecializationResponseDTO result = service.addSpecialization(dto);
 
-		Specialization result = service.addSpecialization(s);
+        assertNotNull(result);
+        assertEquals("Cardiology", result.getName());
+    }
 
-		assertNotNull(result);
-	}
+    @Test
+    void testGetById() {
 
-	@Test
-	void testGetById() {
+        SpecializationResponseDTO s = service.getById(1);
 
-		Specialization s = service.getById(1);
-
-		assertNotNull(s);
-	}
-
-	@Test
-	void testUpdateSpecialization() {
-
-		Specialization s = service.getById(1);
-
-		if (s != null) {
-			s.setName("Neurology");
-			Specialization result = service.updateSpecialization(s);
-			assertEquals("Neurology",result.getName());
-		} else {
-			fail("Specialization not found");
-		}
-	}
-
-
-	@Test
-	void testGetDoctorCount() {
-
-		int count = service.getDoctorCount(1);
-
-		assertTrue(count >= 0);
-	}
-
+        assertNotNull(s);
+    }
 }

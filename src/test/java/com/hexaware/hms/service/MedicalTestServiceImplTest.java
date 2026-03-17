@@ -6,7 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.hexaware.hms.entity.MedicalTest;
+import com.hexaware.hms.dto.MedicalTestRequestDTO;
+import com.hexaware.hms.dto.MedicalTestResponseDTO;
 
 @SpringBootTest
 class MedicalTestServiceImplTest {
@@ -17,13 +18,16 @@ class MedicalTestServiceImplTest {
     @Test
     void testAddTest() {
 
-        MedicalTest test = new MedicalTest();
-        test.setTestName("Blood Test");
+        // Request DTO
+        MedicalTestRequestDTO request = new MedicalTestRequestDTO();
+        request.setTestName("Blood Test");
 
-        MedicalTest savedTest = service.addTest(test);
+        // Service call
+        MedicalTestResponseDTO response = service.addTest(request);
 
-        assertNotNull(savedTest);
-        assertEquals("Blood Test", savedTest.getTestName());
+        // Assertions
+        assertNotNull(response);
+        assertEquals("Blood Test", response.getTestName());
     }
 
 }
